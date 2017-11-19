@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # Docker-Redis-Cluster
 測試架構,預計在CentOS7 Docker環境下建立6台測試機進行測試
 
