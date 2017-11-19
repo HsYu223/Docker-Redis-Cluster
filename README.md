@@ -1,14 +1,15 @@
+# encoding: UTF-8
 # Docker-Redis-Cluster
-´ú¸Õ¬[ºc,¹w­p¦bCentOS7 DockerÀô¹Ò¤U«Ø¥ß6¥x´ú¸Õ¾÷¶i¦æ´ú¸Õ
+æ¸¬è©¦æ¶æ§‹,é è¨ˆåœ¨CentOS7 Dockerç’°å¢ƒä¸‹å»ºç«‹6å°æ¸¬è©¦æ©Ÿé€²è¡Œæ¸¬è©¦
 
-![´ú¸Õ¬[ºc](https://github.com/HsYu223/Docker-Redis-Cluster/blob/master/Images%20File/redis%20server.jpg)
+![æ¸¬è©¦æ¶æ§‹](https://github.com/HsYu223/Docker-Redis-Cluster/blob/master/Images%20File/redis%20server.jpg)
 
-¤U¸üdocker images (´ú¸Õ¨Ï¥Îª©¥»¬°3.2.9)
+ä¸‹è¼‰docker images (æ¸¬è©¦ä½¿ç”¨ç‰ˆæœ¬ç‚º3.2.9)
 ```bash
 sudo docker pull redis:3.2.9
 ```
 
-«Ø¥ßredis³]©wÀÉ([½d¨Ò](https://github.com/HsYu223/Docker-Redis-Cluster/blob/master/redis_sample.conf))
+å»ºç«‹redisè¨­å®šæª”([ç¯„ä¾‹](https://github.com/HsYu223/Docker-Redis-Cluster/blob/master/redis_sample.conf))
 ```bash
 sudo mkdir -p /myredis/conf
 sudo touch /myredis/conf/redis7001.conf
@@ -21,7 +22,7 @@ sudo touch /myredis/conf/redis7007.conf
 sudo touch /myredis/conf/redis7008.conf
 ```
 
-¦w¸Ëdocker redis container
+å®‰è£docker redis container
 ```bash
 sudo docker run -v /myredis/conf/redis7001.conf:/usr/local/etc/redis/redis.conf --net=host -p 7001:7001 -p 17001:17001 --name redis01 -d  redis:3.2.9 redis-server /usr/local/etc/redis/redis.conf
 sudo docker run -v /myredis/conf/redis7002.conf:/usr/local/etc/redis/redis.conf --net=host -p 7002:7002 -p 17002:17002 --name redis02 -d  redis:3.2.9 redis-server /usr/local/etc/redis/redis.conf
@@ -32,50 +33,50 @@ sudo docker run -v /myredis/conf/redis7006.conf:/usr/local/etc/redis/redis.conf 
 sudo docker run -v /myredis/conf/redis7007.conf:/usr/local/etc/redis/redis.conf --net=host -p 7007:7007 -p 17007:17007 --name redis07 -d  redis:3.2.9 redis-server /usr/local/etc/redis/redis.conf
 sudo docker run -v /myredis/conf/redis7008.conf:/usr/local/etc/redis/redis.conf --net=host -p 7008:7008 -p 17008:17008 --name redis08 -d  redis:3.2.9 redis-server /usr/local/etc/redis/redis.conf
 ```
-¥ı§â6¥xªA°È¤@°_±Ò°Ê
+å…ˆæŠŠ6å°æœå‹™ä¸€èµ·å•Ÿå‹•
 ```bash
 docker start redis01 redis02 redis03 redis05 redis06 redis07
 ```
-½T»{±Ò°Êª¬ºA
+ç¢ºèªå•Ÿå‹•ç‹€æ…‹
 ```bash
 docker ps -a
 ```
 
-±Ò°ÊredisÂO¶° (redis-trib)
+å•Ÿå‹•rediså¢é›† (redis-trib)
 ```<language>
 redis-trib.rb create --replicas 1 10.101.1.110:7001 10.101.1.110:7002 10.101.1.110:7003 10.101.1.110:7005 10.101.1.110:7006 10.101.1.110:7007
 ```
 
-½T»{ÂO¶°ª¬ºA
+ç¢ºèªå¢é›†ç‹€æ…‹
 ```bash
 redis-trib.rb check 10.101.1.110:7001
 ```
 
-ÂO¶°´ú¸Õ®×¨Ò¡G
-1. ¥[¤Jmaster
+å¢é›†æ¸¬è©¦æ¡ˆä¾‹ï¼š
+1. åŠ å…¥master
 
 ```bash
 add-node 10.101.1.110:7004 10.101.1.110:7001
 ```
 ![Add Master Node](https://github.com/HsYu223/Docker-Redis-Cluster/blob/master/Images%20File/add%20node%207007.jpg)
    
-2. ¥[¤Jslave
+2. åŠ å…¥slave
 
 ```<language>
 add-node --slave --master-id b0f03581f787c991ef0ee641d06be9bb1aa6606f 10.101.1.110:7008 10.101.1.110:7004
 ```
 ![Add Slave Node](https://github.com/HsYu223/Docker-Redis-Cluster/blob/master/Images%20File/add%20slave%20node%207008.jpg)
 
-3. ¬°·s¥[¤J¸`ÂI¤À°tslot
+3. ç‚ºæ–°åŠ å…¥ç¯€é»åˆ†é…slot
 
 ```bash
-reshard 10.101.1.110:7001 (¤§«á·|¸ß°İ­n²¾°Ê¦h¤Öslots¡B±µ¦¬¸`ÂI¬O½Ö¡B­n±q­ş¨Ç¸`ÂI²¾°Êslot)
+reshard 10.101.1.110:7001 (ä¹‹å¾Œæœƒè©¢å•è¦ç§»å‹•å¤šå°‘slotsã€æ¥æ”¶ç¯€é»æ˜¯èª°ã€è¦å¾å“ªäº›ç¯€é»ç§»å‹•slot)
 ```
 ![Check Node](https://github.com/HsYu223/Docker-Redis-Cluster/blob/master/Images%20File/move%20slot.jpg)
 
 ![Move Result](https://github.com/HsYu223/Docker-Redis-Cluster/blob/master/Images%20File/move%20slot%20result.jpg)
 
-4. master failover½T»{¬O§_¦¨¬°slave   
+4. master failoverç¢ºèªæ˜¯å¦æˆç‚ºslave   
 
 ![Master Failover](https://github.com/HsYu223/Docker-Redis-Cluster/blob/master/Images%20File/redis04%20failover.jpg)
 
@@ -83,7 +84,7 @@ reshard 10.101.1.110:7001 (¤§«á·|¸ß°İ­n²¾°Ê¦h¤Öslots¡B±µ¦¬¸`ÂI¬O½Ö¡B­n±q­ş¨Ç¸`ÂI
 
 ![Master Failover](https://github.com/HsYu223/Docker-Redis-Cluster/blob/master/Images%20File/when%20redi04%20get%20back%20will%20be%20slave.jpg)
 
-5. ©µÄò3. ÁÙ­ì¦¨master½T»{
+5. å»¶çºŒ3. é‚„åŸæˆmasterç¢ºèª
 
 ![Master Failover](https://github.com/HsYu223/Docker-Redis-Cluster/blob/master/Images%20File/redis04%20reset%20to%20master.jpg)
 
@@ -95,13 +96,13 @@ reshard 10.101.1.110:7001 (¤§«á·|¸ß°İ­n²¾°Ê¦h¤Öslots¡B±µ¦¬¸`ÂI¬O½Ö¡B­n±q­ş¨Ç¸`ÂI
 
 ![Slave Failover](https://github.com/HsYu223/Docker-Redis-Cluster/blob/master/Images%20File/redis08%20slave%20get%20back.jpg)
 
-7. §R°£master¡Bslave
+7. åˆªé™¤masterã€slave
 
 ```bash
-/// Master (²¾°£master¤§«e,½Ğ°O±o¥ı²MªÅ¤w¸g¤À°t¨ìªºslot,¹Á¸Õ¨Ï¥Î®×¨Ò3ªº¤è¦¡­«·s¤À°tslot)
+/// Master (ç§»é™¤masterä¹‹å‰,è«‹è¨˜å¾—å…ˆæ¸…ç©ºå·²ç¶“åˆ†é…åˆ°çš„slot,å˜—è©¦ä½¿ç”¨æ¡ˆä¾‹3çš„æ–¹å¼é‡æ–°åˆ†é…slot)
 del-node 10.101.1.110:7004 8bc21197b94ed9ba3703d3643d5ed8a3399463ed
 
-/// Slave (¤£»İ­n­«·s¤À°tslot)
+/// Slave (ä¸éœ€è¦é‡æ–°åˆ†é…slot)
 del-node 10.101.1.110:7008 dc05c7005e664b24709475bb17114a2ecf6bca71
 ```
 
